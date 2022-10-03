@@ -19,6 +19,16 @@ while True:
     def copy_to_clipboard():
         root.clipboard_clear()  # Очистить буфер обмена
         root.clipboard_append(lbl['text'])  # Добавить текст в буфер обмена
+    def KeyGet():
+        while True:
+            key = input('')
+            try:
+                global f
+                f = Fernet(key)
+                break
+            except:
+                print('Неверный ключ, попробуйте снова')
+                continue
 
     print('Выберите объект для работы: Файл [1] | Архив [2] | Выход [0]')
     a = int(input())
@@ -45,8 +55,11 @@ while True:
             Tk().withdraw()
             file = askopenfilename()
             #Сохранение имени и расщирения файла
-            with open(file, 'rb') as original_file:
-                original = original_file.read()
+            try:
+                with open(file, 'rb') as original_file:
+                    original = original_file.read()
+            except:
+                break
             #Шифрование файла
             encrypted = f.encrypt(original)
             print('Кодирование...')
@@ -66,17 +79,15 @@ while True:
         if choice == 2:
             #Получение ключа
             print('Введите ключ шифрования:')
-            key = input('')
-            try:
-                f = Fernet(key)
-            except:
-                print('Неверный ключ')
-                break
+            KeyGet()
             #Получение файла
             print('Выберите файл для расшифровки')
             file_enc = askopenfilename()
-            with open(file_enc, 'rb') as encrypted_file:
-                encrypted = encrypted_file.read()
+            try:
+                with open(file_enc, 'rb') as encrypted_file:
+                    encrypted = encrypted_file.read()
+            except:
+                break
             decrypted = f.decrypt(encrypted)
             name = 'dec_' + os.path.basename(file_enc)
             with open(name, 'wb') as decrypted_file:
@@ -168,16 +179,15 @@ while True:
             #Получение ключа
             print('Введите ключ шифрования:')
             key = input('')
-            try:
-                f = Fernet(key)
-            except:
-                print('Неверный ключ')
-                break
+            KeyGet()
             #Получение файла
             print('Выберите файл для расшифровки')
             file_enc = askopenfilename()
-            with open(file_enc, 'rb') as encrypted_file:
-                encrypted = encrypted_file.read()
+            try:
+                with open(file_enc, 'rb') as encrypted_file:
+                    encrypted = encrypted_file.read()
+            except:
+                break
             decrypted = f.decrypt(encrypted)
             with open(file_enc, 'wb') as decrypted_file:
                 decrypted_file.write(decrypted)                    

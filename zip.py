@@ -49,6 +49,8 @@ while True:
             btn = Button(root, text='copy', command=copy_to_clipboard)
             lbl.grid(row=0, column=0)
             btn.grid(row=1, column=0)
+            w, h = 365, 55
+            root.geometry(f"{w}x{h}+{(root.winfo_screenwidth()-w)//2}+{(root.winfo_screenheight()-h)//2}")
             root.mainloop()
             f = Fernet(key)
             #Выбор файла
@@ -62,16 +64,15 @@ while True:
                 break
             #Шифрование файла
             encrypted = f.encrypt(original)
-            print('Кодирование...')
-            name = 'enc_' + os.path.basename(file)
-            with open(name, 'wb') as encrypted_file:
-                encrypted_file.write(encrypted)
-            encrypted_file_path = os.path.abspath(name)
-            #Место сохранения файла
             print('Куда сохранить файл?')
             Tk().withdraw()
             path_to_save_file = askdirectory()
-            shutil.move(encrypted_file_path, path_to_save_file)
+            print('Кодирование...')
+            name = path_to_save_file + '/enc_' + os.path.basename(file)
+            print(name)
+            with open(name, 'wb') as encrypted_file:
+                encrypted_file.write(encrypted)
+            encrypted_file_path = os.path.abspath(name)
 
             print('Файл закодирован')
             continue
@@ -88,8 +89,12 @@ while True:
                     encrypted = encrypted_file.read()
             except:
                 break
+            print('Куда сохранить файл?')
+            Tk().withdraw()
+            path_to_save_file = askdirectory()
+
             decrypted = f.decrypt(encrypted)
-            name = 'dec_' + os.path.basename(file_enc)
+            name = 'path_to_save_file' + '/dec_' + os.path.basename(file_enc)
             with open(name, 'wb') as decrypted_file:
                 decrypted_file.write(decrypted)
             decrypted_file_path = os.path.abspath(name)
@@ -129,7 +134,9 @@ while True:
 
         #Распаковка
         if choice == 2:
+            print('Выберите папку для Архивации')
             path_to_archive = askopenfilename()
+            print('Где распаковать?')
             path_to_extract = askdirectory()
             print('Распаковка...')
             shutil.unpack_archive(path_to_archive, path_to_extract)
@@ -157,6 +164,8 @@ while True:
             btn = Button(root, text='copy', command=copy_to_clipboard)
             lbl.grid(row=0, column=0)
             btn.grid(row=1, column=0)
+            w, h = 365, 55
+            root.geometry(f"{w}x{h}+{(root.winfo_screenwidth()-w)//2}+{(root.winfo_screenheight()-h)//2}")
             f = Fernet(key)
             file = name + '.' + str(type_list[type_of_archive])
 
